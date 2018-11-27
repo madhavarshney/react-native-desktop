@@ -76,7 +76,7 @@ jobs:
 
       - run:
           name: Install and patch NPM dependencies
-          command: npm ci && npx patch-package
+          command: npm ci
 
       - save_cache:
           key: npm-cache-{{ .Branch }}-{{ .Revision }}

@@ -11,25 +11,11 @@
 'use strict';
 
 const path = require('path');
-const findPlugins = require('../local-cli/core/findPlugins');
 
-const plugins = findPlugins([path.resolve(__dirname, '../../../')]);
-
-// Detect out-of-tree platforms and add them to the whitelists
-const pluginRoots /*: Array<
-  string,
-> */ = plugins.haste.providesModuleNodeModules.map(
-  name => path.resolve(__dirname, '../../', name) + path.sep,
-);
-
-const pluginNameReducers /*: Array<
-  [RegExp, string],
-> */ = plugins.haste.platforms.map(name => [
-  new RegExp(`^(.*)\.(${name})$`),
-  '$1',
-]);
-
-const ROOTS = [path.resolve(__dirname, '..') + path.sep, ...pluginRoots];
+const ROOTS = [
+  path.resolve(__dirname, '..') + path.sep,
+  path.resolve(__dirname, '../node_modules/react-native') + path.sep,
+];
 
 const BLACKLISTED_PATTERNS /*: Array<RegExp> */ = [
   /.*[\\\/]__(mocks|tests)__[\\\/].*/,
@@ -51,8 +37,6 @@ const NAME_REDUCERS /*: Array<[RegExp, string]> */ = [
   [/^(.*)\.js(\.flow)?$/, '$1'],
   // strip platform suffix
   [/^(.*)\.(android|ios|native|desktop)$/, '$1'],
-  // strip plugin platform suffixes
-  ...pluginNameReducers,
 ];
 
 const haste = {

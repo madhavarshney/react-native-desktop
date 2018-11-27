@@ -11,18 +11,16 @@
  *
  */
 
-const http = require('http');
 const path = require('path');
 const chalk = require('chalk');
 const child_process = require('child_process');
-const fs = require('fs');
 const mkdirp = require('mkdirp');
 const Promise = require('promise');
-const bundle = require('../bundle/bundle');
+const bundle = require('react-native/local-cli/bundle/bundle');
 
 const parseArguments = require('./parseArguments');
 const checkDesktop = require('./checkDesktop');
-const buildDesktop = require('./buildDesktop');
+const build = require('./build');
 
 
 function packageDesktop(argv, config) {
@@ -45,7 +43,7 @@ function packageDesktop(argv, config) {
       resolve();
     });
   }).then(() => {
-    return buildDesktop(args);
+    return build(args);
   }).then(() => {
     console.log(chalk.bold('Running RN bundler...'));
     const sharePath = path.join(packagePath, 'share');

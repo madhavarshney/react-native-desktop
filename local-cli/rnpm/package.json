@@ -1,0 +1,24 @@
+{
+  "name": "rnpm-plugin-desktop",
+  "version": "0.1.0",
+  "description": "An RNPM plugin that generates a react-native-desktop template project",
+  "license": "MIT",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/status-im/react-native-desktop.git"
+  },
+  "keywords": [
+    "react-native",
+    "react-native-desktop",
+    "rnpm"
+  ],
+  "dependencies": {
+    "npm-registry": "^0.1.13",
+    "semver": "^5.6.0",
+    "valid-url": "^1.0.9"
+  },
+  "peerDependencies": {
+    "react-native": ">=0.57.0"
+  }
+}

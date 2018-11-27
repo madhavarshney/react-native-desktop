@@ -19,7 +19,7 @@ const fs = require('fs');
 const child_process = require('child_process');
 
 
-function build(args, dependencies) {
+function build(args) {
   var desktopExternalModules = _findDesktopExternalModules(args);
   console.log("Found desktop external modules: " + desktopExternalModules);
   var desktopJSBundlePath = _findDesktopJSBundlePath(args);

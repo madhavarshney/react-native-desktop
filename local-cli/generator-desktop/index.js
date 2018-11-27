@@ -11,12 +11,10 @@
 
 'use strict';
 
-var chalk = require('chalk');
-var fs = require('fs');
-var path = require('path');
-var yeoman = require('yeoman-generator');
-var mkdirp = require('mkdirp');
-
+const chalk = require('chalk');
+const path = require('path');
+const yeoman = require('yeoman-generator');
+const mkdirp = require('mkdirp');
 
 function validatePackageName(name) {
   // TODO: check that this matches Desktop package reqs as well
@@ -26,29 +24,37 @@ function validatePackageName(name) {
   return true;
 }
 
-module.exports = yeoman.generators.NamedBase.extend({
-  constructor: function() {
-    yeoman.generators.NamedBase.apply(this, arguments);
+class DesktopGenerator extends yeoman {
+  constructor(args, opts) {
+    super(args, opts);
+    this.name = args[0];
+
+    if (!this.name || typeof this.name !== 'string') {
+      throw new Error('Please give a valid name.');
+    }
 
     this.option('package', {
       desc: 'Package name for the application (appname.developername)',
       type: String,
       defaults: this.name.toLowerCase() + '.dev'
     });
-  },
 
-  initializing: function() {
     if (!validatePackageName(this.options.package)) {
       throw new Error('Package name ' + this.options.package + ' is invalid');
     }
-  },
+  }
 
-  writing: function() {
-    var templateParams = {
+  writing() {
+    const templateParams = {
       package: this.options.package,
       name: this.name,
       lowerCaseName: this.name.toLowerCase()
     };
+    this.fs.copyTpl(
+      this.templatePath('index.desktop.js'),
+      this.destinationPath('index.desktop.js'),
+      templateParams
+    );
     this.fs.copyTpl(
       this.templatePath('CMakeLists.txt'),
       this.destinationPath(path.join('desktop', 'CMakeLists.txt')),
@@ -89,13 +95,14 @@ module.exports = yeoman.generators.NamedBase.extend({
 
     mkdirp.sync('desktop/share');
     mkdirp.sync('desktop/plugins');
-    mkdirp.sync('desktop/tmp');
-  },
+  }
 
-  end: function() {
-    var projectPath = this.destinationRoot();
+  end() {
+    const projectPath = this.destinationRoot();
     this.log(chalk.white.bold('To run your app on your Desktop natively:'));
     this.log(chalk.white('   cd ' + projectPath));
     this.log(chalk.white('   react-native run-desktop'));
   }
-});
+};
+
+module.exports = DesktopGenerator;

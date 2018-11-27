@@ -13,12 +13,8 @@
 
 'use strict';
 
-const path = require('path');
-const chalk = require('chalk');
-const child_process = require('child_process');
 const parseArguments = require('./parseArguments');
 const build = require('./build');
-
 
 function buildDesktop(argv, config) {
   const args = parseArguments(argv);

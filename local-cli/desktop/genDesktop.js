@@ -10,34 +10,12 @@
 
 'use strict';
 
-const fs = require('fs');
-var generate = require('../generate/generate');
-const { exec } = require('child_process');
+const path = require('path');
+const yeoman = require('yeoman-environment');
 
-function applyDesktopPlatformPatch() {
-  exec('git apply --reverse ./node_modules/react-native/patches/metro-config+0.48.3.patch');
-  exec('git apply ./node_modules/react-native/patches/metro-config+0.48.3.patch', (err, stdout, stderr) => {
-     console.log(`Std output: ${stdout}`);
-     if (err) {
-       console.error(`exec error: ${err}`);
-       return;
-     }
-   });
+module.exports = function genDesktop(name) {
+  const env = yeoman.createEnv();
+  const generatorPath = path.join(__dirname, '../generator-desktop');
+  env.register(generatorPath, 'react:app');
+  env.run(['react:app', name]);
 }
-
-function genDesktop(args, config) {
-  applyDesktopPlatformPatch();
-  return generate([
-     '--platform', 'desktop',
-     '--project-path', process.cwd(),
-     '--project-name', JSON.parse(
-       fs.readFileSync('package.json', 'utf8')
-     ).name
-    ], config);
-}
-
-module.exports = {
-  name: 'desktop',
-  description: 'generates a desktop project for your app',
-  func: genDesktop
-};

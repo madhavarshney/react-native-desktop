@@ -13,7 +13,7 @@
 
 'use strict';
 
-const parseCommandLine = require('../util/parseCommandLine');
+const parseCommandLine = require('react-native/local-cli/util/parseCommandLine');
 
 function parseArguments(argv) {
   const args = parseCommandLine([{

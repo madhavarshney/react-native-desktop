@@ -16,8 +16,7 @@
 const path = require('path');
 const chalk = require('chalk');
 const child_process = require('child_process');
-const fs = require('fs');
-const isPackagerRunning = require('../util/isPackagerRunning');
+const isPackagerRunning = require('react-native/local-cli/util/isPackagerRunning');
 const Promise = require('promise');
 
 const parseArguments = require('./parseArguments');

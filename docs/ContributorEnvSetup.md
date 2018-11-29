@@ -35,7 +35,7 @@ Tab `Preferences`->`Beautifier`->`Clang Format`.
 ![](media/qtcreator-pref-beautifier-clangformat.png)
 
 #### Format manually
-Run [fix-formatting.sh](https://github.com/status-im/react-native-desktop/blob/master/fix-code-formatting.sh) to apply clang-format rules to the project code.
+Run [fix-formatting.sh](https://github.com/status-im/react-native-desktop/blob/master/scripts/fix-code-formatting.sh) to apply clang-format rules to the project code.
 
 ### Build react-native-desktop with Qt Creator
 

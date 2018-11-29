@@ -16,20 +16,20 @@ Help reviewers and the release process by writing your own release notes. See be
 <!--
   **INTERNAL and MINOR tagged notes will not be included in the next version's final release notes.**
 
-    CATEGORY
-  [----------]      TYPE
-  [ CLI      ] [-------------]    LOCATION
-  [ DOCS     ] [ BREAKING    ] [-------------]
-  [ GENERAL  ] [ BUGFIX      ] [ {Component} ]
-  [ INTERNAL ] [ ENHANCEMENT ] [ {Filename}  ]
-  [ IOS      ] [ FEATURE     ] [ {Directory} ]   |-----------|
-  [ ANDROID  ] [ MINOR       ] [ {Framework} ] - | {Message} |
+
+    CATEGORY        TYPE
+  [----------] [-------------]    LOCATION
+  [ CLI      ] [ BREAKING    ] [-------------]
+  [ DOCS     ] [ BUGFIX      ] [ {Component} ]
+  [ GENERAL  ] [ ENHANCEMENT ] [ {Filename}  ]
+  [ INTERNAL ] [ FEATURE     ] [ {Directory} ]   |-----------|
+  [ DESKTOP  ] [ MINOR       ] [ {Framework} ] - | {Message} |
   [----------] [-------------] [-------------]   |-----------|
 
  EXAMPLES:
 
- [IOS] [BREAKING] [FlatList] - Change a thing that breaks other things
- [ANDROID] [BUGFIX] [TextInput] - Did a thing to TextInput
+ [DESKTOP] [BREAKING] [FlatList] - Change a thing that breaks other things
+ [DESKTOP] [BUGFIX] [TextInput] - Did a thing to TextInput
  [CLI] [FEATURE] [local-cli/info/info.js] - CLI easier to do things with
  [DOCS] [BUGFIX] [GettingStarted.md] - Accidentally a thing/word
  [GENERAL] [ENHANCEMENT] [Yoga] - Added new yoga thing/position

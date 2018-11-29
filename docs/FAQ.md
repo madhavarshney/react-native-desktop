@@ -8,12 +8,9 @@ When running it sends short pieces of JS code to invoke React Native functions a
 
 ### How would you best describe the role of the `react-native-desktop` repo?
 
-Also: what code should live there? A build tool? Housing build related code?
+_Also: what code should live there? A build tool? Housing build related code?_
 
-Right now `react-native-desktop` repo contains original `react-native` code plus desktop support, so its role is `Substitution of react-native repo with desktop platform added`. 
-I hope that soon we will cleanup repo and will leave only desktop-related code in it (no original react native code). Than role of repo will be `extension of react-native for desktop support`.
-
-In both cases this repo should contain code and tools required to create, build and deploy react-native applications for desktop.
+`react-native-desktop` repo contains code for adding desktop support to `react-native`, so its role is "an extension of react-native for desktop support".
 
 ### What repo was `react-native-desktop` originally forked from?
 

@@ -28,7 +28,7 @@ diffoscope ./ ~/PATH_TO_WORKING_COPY/react-native-desktop/ --text result.txt
 │  Libraries/Components/WebView/WebView.ios.js
 ```
 - Compile react-native-desktop native sources with CMake.
-- Do `npm install` and make sure that `metro` package is patched correctly with `patch-package` tool (Reference https://www.npmjs.com/package/patch-package to update patch files if patching fails).
+- Do `npm install` to install node_modules.
 - Run metro packager with `npm start` to make sure that it starts correctly and without JS export collisions or any others warnings.
 - Run JS RNTesterApp to verify that framework is starting and working fine in general.
 - Run jest tests with `npm test` (on CI special cmd to start jest tests is used referenced in `package.json` as `test-ci`).
@@ -41,6 +41,5 @@ diffoscope ./ ~/PATH_TO_WORKING_COPY/react-native-desktop/ --text result.txt
 - While status-react is not stick to specific remote branch of react-native-desktop, upgrading of main branch of status-react and react-native-desktop to new react-native-desktop version should happen at one point of time.
 - Update `desktop_files/package.json` to reference upgraded react-native-desktop version with your working changes.
 - Update `desktop_files/package.json` to depend on the same version of `react`, `react-dom` and range of `babel` packages. See https://github.com/status-im/status-react/commit/6cdff789e1859e2ad28d7d0a6aea536bf75fadbe for the reference.
-- Update `patch-package` patches if required.
 - Verify that dev build is working fine.
 - Create PR and make sure that Jenkins build is passed fine.

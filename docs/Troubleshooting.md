@@ -1,8 +1,5 @@
 These are some common issues you may run into while setting up React Native Qt.
 
-### `npm install` hangs
-Downgrade to version 5.5.1: `npm install -g npm@5.5.1`.
-
 ### `react-native run desktop` complaining about missing `qmldir`:
 
 ```
@@ -14,10 +11,6 @@ make: *** [all] Error 2
 ```
 
 Can be solved by re-running `npm install react-native` which put the `ReactQt/runtime/src/qmldir` file back.
-
-### Missing web3 package issue
-
-After last upgrade of react-native-desktop to the v.0.53.3 of original react-native appeared some incompatibility between `react-native` and `web3` packages on npm install. Initially it installed usually fine, but after `react-native desktop` command execution `web3` package is get removed from `node_modules`. Manual install of web3 by `npm install web3` installs `web3` package, but removes `react-native` package. Workaround or solution?
 
 ### ReactButton.qml non-existent property "elide" error upon startup
 

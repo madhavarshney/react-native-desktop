@@ -1,4 +1,4 @@
-// Copyright (c) 2004-present, Facebook, Inc.
+// Copyright (c) Facebook, Inc. and its affiliates.
 
 // This source code is licensed under the MIT license found in the
 // LICENSE file in the root directory of this source tree.
@@ -48,6 +48,8 @@ class RN_EXPORT ModuleRegistry {
   void registerModules(QList<ModuleData*> modules);
 
   std::vector<std::string> moduleNames();
+
+  folly::Optional<ModuleConfig> getConfig(const std::string& name);
 
   void callNativeMethod(unsigned int moduleId, unsigned int methodId, folly::dynamic&& params, int callId);
   MethodCallResult callSerializableNativeHook(unsigned int moduleId, unsigned int methodId, folly::dynamic&& args);

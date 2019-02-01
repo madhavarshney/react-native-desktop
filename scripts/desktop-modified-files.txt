@@ -12,6 +12,7 @@ Libraries/Alert/Alert.js
 Libraries/Modal/Modal.js
 Libraries/ReactNative/UIManager.js
 Libraries/Components/ActivityIndicator/ActivityIndicator.js
+Libraries/Components/Button.js
 Libraries/Components/ScrollView/ScrollView.js
 Libraries/Components/TextInput/TextInput.js
 Libraries/Components/Picker/Picker.js

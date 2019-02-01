@@ -10,7 +10,6 @@
  */
 'use strict';
 
-var Map = require('Map');
 var React = require('React');
 var PropTypes = React.PropTypes;
 var LayoutPropTypes = require("LayoutPropTypes");

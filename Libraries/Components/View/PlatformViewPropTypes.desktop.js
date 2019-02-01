@@ -10,4 +10,6 @@
  * @flow
  */
 
-module.export = {};
+'use strict';
+
+export type PlatformViewPropTypes = {};

@@ -1,35 +1,41 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * On Apple TV, this implements back navigation using the TV remote's menu button.
- * On iOS, this just implements a stub.
- *
- * @providesModule BackHandler
+ * @flow
+ * @format
  */
 
 'use strict';
 
-const Platform = require('Platform');
+type BackPressEventName = 'backPress' | 'hardwareBackPress';
 
-type BackPressEventName = $Enum<{
-  backPress: string,
-}>;
+function emptyFunction(): void {}
 
-function emptyFunction() {}
+type TBackHandler = {|
+  +exitApp: () => void,
+  +addEventListener: (
+    eventName: BackPressEventName,
+    handler: Function,
+  ) => {remove: () => void},
+  +removeEventListener: (
+    eventName: BackPressEventName,
+    handler: Function,
+  ) => void,
+|};
 
-let BackHandler;
+let BackHandler: TBackHandler;
 
 BackHandler = {
   exitApp: emptyFunction,
-  addEventListener() {
+  addEventListener(_eventName: BackPressEventName, _handler: Function) {
     return {
       remove: emptyFunction,
     };
   },
-  removeEventListener: emptyFunction,
+  removeEventListener(_eventName: BackPressEventName, _handler: Function) {},
 };
 
 module.exports = BackHandler;

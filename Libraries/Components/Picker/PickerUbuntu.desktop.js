@@ -1,67 +1,55 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
- * All rights reserved.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the BSD-style license found in the
- * LICENSE file in the root directory of this source tree. An additional grant
- * of patent rights can be found in the PATENTS file in the same directory.
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
  *
- * @providesModule PickerUbuntu
+ * @format
  * @flow
  */
 
 'use strict';
 
-var ColorPropType = require('ColorPropType');
-var React = require('React');
-var ReactPropTypes = require('prop-types');
-var StyleSheet = require('StyleSheet');
-var StyleSheetPropType = require('StyleSheetPropType');
-const ViewPropTypes = require('ViewPropTypes');
-var ViewStylePropTypes = require('ViewStylePropTypes');
+const React = require('React');
+const StyleSheet = require('StyleSheet');
 
-var requireNativeComponent = require('requireNativeComponent');
+const processColor = require('processColor');
+const requireNativeComponent = require('requireNativeComponent');
 
-var REF_PICKER = 'picker';
-var MODE_DROPDOWN = 'dropdown';
+const UbuntuPicker = requireNativeComponent('RCTPickerView');
 
-var pickerStyleType = StyleSheetPropType({
-  ...ViewStylePropTypes,
-  color: ColorPropType,
-});
+const REF_PICKER = 'picker';
+const MODE_DROPDOWN = 'dropdown';
 
-type Event = Object;
+import type {SyntheticEvent} from 'CoreEventTypes';
+import type {TextStyleProp} from 'StyleSheet';
+
+type PickerUbuntuChangeEvent = SyntheticEvent<
+  $ReadOnly<{|
+    position: number,
+  |}>,
+>;
+
+type PickerUbuntuProps = $ReadOnly<{|
+  children?: React.Node,
+  style?: ?TextStyleProp,
+  selectedValue?: any,
+  enabled?: ?boolean,
+  mode?: ?('dialog' | 'dropdown'),
+  onValueChange?: ?(newValue: any, newIndex: number) => mixed,
+  prompt?: ?string,
+  testID?: string,
+|}>;
 
 /**
  * Not exposed as a public API - use <Picker> instead.
  */
-class PickerUbuntu extends React.Component {
-  props: {
-    style?: $FlowFixMe,
-    selectedValue?: any,
-    enabled?: boolean,
-    mode?: 'dialog' | 'dropdown',
-    onValueChange?: Function,
-    prompt?: string,
-    testID?: string,
-  };
-
-  state: *;
-
-  static propTypes = {
-    ...ViewPropTypes,
-    style: pickerStyleType,
-    selectedValue: ReactPropTypes.any,
-    enabled: ReactPropTypes.bool,
-    mode: ReactPropTypes.oneOf(['dialog', 'dropdown']),
-    onValueChange: ReactPropTypes.func,
-    prompt: ReactPropTypes.string,
-    testID: ReactPropTypes.string,
-  };
-
+class PickerUbuntu extends React.Component<PickerUbuntuProps, *> {
+  /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+   * when making Flow check .android.js files. */
   constructor(props, context) {
     super(props, context);
-    var state = this._stateFromProps(props);
+    const state = this._stateFromProps(props);
 
     this.state = {
       ...state,
@@ -69,13 +57,15 @@ class PickerUbuntu extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+   * when making Flow check .android.js files. */
+  UNSAFE_componentWillReceiveProps(nextProps) {
     this.setState(this._stateFromProps(nextProps));
   }
 
   // Translate prop and children into stuff that the native picker understands.
-  _stateFromProps = (props) => {
-    var selectedIndex = 0;
+  _stateFromProps = props => {
+    let selectedIndex = 0;
     const items = React.Children.map(props.children, (child, index) => {
       if (child.props.value === props.selectedValue) {
         selectedIndex = index;
@@ -83,46 +73,59 @@ class PickerUbuntu extends React.Component {
       const childProps = {
         value: child.props.value,
         label: child.props.label,
-        color: child.props.color
       };
+      if (child.props.color) {
+        /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was
+         * found when making Flow check .android.js files. */
+        childProps.color = processColor(child.props.color);
+      }
       return childProps;
     });
     return {selectedIndex, items};
   };
 
   render() {
-    var Picker = UbuntuPicker //this.props.mode === MODE_DROPDOWN ? DropdownPicker : DialogPicker;
-    var nativeProps = {
+    const Picker = UbuntuPicker;
+
+    const nativeProps = {
       enabled: this.props.enabled,
       items: this.state.items,
       mode: this.props.mode,
-      onValueChange: this._onChange,
+      onSelect: this._onChange,
       prompt: this.props.prompt,
       selected: this.state.initialSelectedIndex,
       testID: this.props.testID,
       style: [styles.pickerUbuntu, this.props.style],
+      /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+       * when making Flow check .android.js files. */
       accessibilityLabel: this.props.accessibilityLabel,
     };
 
     return <Picker ref={REF_PICKER} {...nativeProps} />;
   }
 
-  _onChange = (event: Event) => {
+  _onChange = (event: PickerUbuntuChangeEvent) => {
     if (this.props.onValueChange) {
-      var position = event.nativeEvent.position;
+      const position = event.nativeEvent.position;
       if (position >= 0) {
-        var children = React.Children.toArray(this.props.children);
-        var value = children[position].props.value;
+        const children = React.Children.toArray(this.props.children);
+        const value = children[position].props.value;
+        /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was
+         * found when making Flow check .android.js files. */
         this.props.onValueChange(value, position);
       } else {
         this.props.onValueChange(null, position);
       }
     }
+    /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+     * when making Flow check .android.js files. */
     this._lastNativePosition = event.nativeEvent.position;
     this.forceUpdate();
   };
 
   componentDidMount() {
+    /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+     * when making Flow check .android.js files. */
     this._lastNativePosition = this.state.initialSelectedIndex;
   }
 
@@ -133,14 +136,23 @@ class PickerUbuntu extends React.Component {
     // disallow/undo/mutate the selection of certain values. In other
     // words, the embedder of this component should be the source of
     // truth, not the native component.
-    if (this.refs[REF_PICKER] && this.state.selectedIndex !== this._lastNativePosition) {
-      this.refs[REF_PICKER].setNativeProps({selected: this.state.selectedIndex});
+    if (
+      this.refs[REF_PICKER] &&
+      /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+       * when making Flow check .android.js files. */
+      this.state.selectedIndex !== this._lastNativePosition
+    ) {
+      this.refs[REF_PICKER].setNativeProps({
+        selected: this.state.selectedIndex,
+      });
+      /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found
+       * when making Flow check .android.js files. */
       this._lastNativePosition = this.state.selectedIndex;
     }
   }
 }
 
-var styles = StyleSheet.create({
+const styles = StyleSheet.create({
   pickerUbuntu: {
     // The picker will conform to whatever width is given, but we do
     // have to set the component's height explicitly on the
@@ -150,17 +162,5 @@ var styles = StyleSheet.create({
     height: 50,
   },
 });
-
-var cfg = {
-  nativeOnly: {
-    items: true,
-    selected: true,
-  }
-};
-
-//var DropdownPicker = requireNativeComponent('AndroidDropdownPicker', PickerAndroid, cfg);
-//var DialogPicker = requireNativeComponent('AndroidDialogPicker', PickerAndroid, cfg);
-//var UbuntuPicker = requireNativeComponent('RCTPickerView', Picker, cfg);
-var UbuntuPicker = requireNativeComponent('RCTPickerView');
 
 module.exports = PickerUbuntu;

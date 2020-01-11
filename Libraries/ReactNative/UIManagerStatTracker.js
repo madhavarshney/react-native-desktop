@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,7 +9,7 @@
  */
 'use strict';
 
-const UIManager = require('UIManager');
+const UIManager = require('./UIManager');
 
 let installed = false;
 const UIManagerStatTracker = {
@@ -52,8 +52,8 @@ const UIManagerStatTracker = {
       remove,
     ) {
       incStat('manageChildren', 1);
-      incStat('move', Object.keys(moveFrom || []).length);
-      incStat('remove', Object.keys(remove || []).length);
+      incStat('move', moveFrom.length);
+      incStat('remove', remove.length);
       manageChildrenOrig(tag, moveFrom, moveTo, addTags, addIndices, remove);
     };
   },

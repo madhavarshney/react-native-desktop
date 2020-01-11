@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,12 +9,12 @@
  */
 'use strict';
 
-jest.setMock('NativeModules', {
+jest.setMock('../../BatchedBridge/NativeModules', {
   BlobModule: require('../__mocks__/BlobModule'),
 });
 
-const Blob = require('Blob');
-const BlobManager = require('BlobManager');
+const Blob = require('../Blob');
+const BlobManager = require('../BlobManager');
 
 describe('BlobManager', function() {
   it('should create blob from parts', () => {

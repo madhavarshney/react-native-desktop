@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,11 +10,11 @@
 
 'use strict';
 
-const React = require('React');
-const View = require('View');
+const React = require('react');
+const View = require('../Components/View/View');
 
 class BorderBox extends React.Component<$FlowFixMeProps> {
-  render() {
+  render(): $FlowFixMe | React.Node {
     const box = this.props.box;
     if (!box) {
       return this.props.children;

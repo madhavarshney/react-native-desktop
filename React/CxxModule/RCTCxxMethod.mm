@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -57,7 +57,7 @@ using namespace facebook::react;
   // is also baked into _method.
 
   // the last N arguments are callbacks, according to the Method data.  The
-  // preceding arguments are values whic have already been parsed from JS: they
+  // preceding arguments are values which have already been parsed from JS: they
   // may be NSNumber (bool, int, double), NSString, NSArray, or NSObject.
 
   CxxModule::Callback first;

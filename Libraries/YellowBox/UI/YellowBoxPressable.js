@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,15 +10,15 @@
 
 'use strict';
 
-const React = require('React');
-const StyleSheet = require('StyleSheet');
-const TouchableWithoutFeedback = require('TouchableWithoutFeedback');
-const View = require('View');
-const YellowBoxStyle = require('YellowBoxStyle');
+const React = require('react');
+const StyleSheet = require('../../StyleSheet/StyleSheet');
+const TouchableWithoutFeedback = require('../../Components/Touchable/TouchableWithoutFeedback');
+const View = require('../../Components/View/View');
+const YellowBoxStyle = require('./YellowBoxStyle');
 
-import type {PressEvent} from 'CoreEventTypes';
-import type {EdgeInsetsProp} from 'EdgeInsetsPropType';
-import type {ViewStyleProp} from 'StyleSheet';
+import type {EdgeInsetsProp} from '../../StyleSheet/EdgeInsetsPropType';
+import type {ViewStyleProp} from '../../StyleSheet/StyleSheet';
+import type {PressEvent} from '../../Types/CoreEventTypes';
 
 type Props = $ReadOnly<{|
   backgroundColor: $ReadOnly<{|
@@ -36,14 +36,16 @@ type State = {|
 |};
 
 class YellowBoxPressable extends React.Component<Props, State> {
-  static defaultProps = {
+  static defaultProps: $TEMPORARY$object<{|
+    backgroundColor: $TEMPORARY$object<{|default: string, pressed: string|}>,
+  |}> = {
     backgroundColor: {
       default: YellowBoxStyle.getBackgroundColor(0.95),
       pressed: YellowBoxStyle.getHighlightColor(1),
     },
   };
 
-  state = {
+  state: State = {
     pressed: false,
   };
 

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,8 +11,8 @@
 
 'use strict';
 
-const YellowBox = require('YellowBox');
-const YellowBoxRegistry = require('YellowBoxRegistry');
+const YellowBox = require('../YellowBox');
+const YellowBoxRegistry = require('../Data/YellowBoxRegistry');
 
 describe('YellowBox', () => {
   const {error, warn} = console;
@@ -54,7 +54,7 @@ describe('YellowBox', () => {
   });
 
   it('registers warnings', () => {
-    jest.mock('YellowBoxRegistry');
+    jest.mock('../Data/YellowBoxRegistry');
 
     YellowBox.install();
 
@@ -64,7 +64,7 @@ describe('YellowBox', () => {
   });
 
   it('registers errors beginning with "Warning: "', () => {
-    jest.mock('YellowBoxRegistry');
+    jest.mock('../Data/YellowBoxRegistry');
 
     YellowBox.install();
 

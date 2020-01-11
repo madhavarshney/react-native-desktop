@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,9 +11,10 @@
 
 const AnimatedValue = require('./nodes/AnimatedValue');
 const NativeAnimatedHelper = require('./NativeAnimatedHelper');
-const ReactNative = require('ReactNative');
+const ReactNative = require('../../Renderer/shims/ReactNative');
 
-const invariant = require('fbjs/lib/invariant');
+const invariant = require('invariant');
+
 const {shouldUseNativeDriver} = require('./NativeAnimatedHelper');
 
 export type Mapping = {[key: string]: Mapping} | AnimatedValue;
@@ -26,7 +27,7 @@ function attachNativeEvent(
   viewRef: any,
   eventName: string,
   argMapping: Array<?Mapping>,
-) {
+): $TEMPORARY$object<{|detach: () => void|}> {
   // Find animated values in `argMapping` and create an array representing their
   // key path inside the `nativeEvent` object. Ex.: ['contentOffset', 'x'].
   const eventMappings = [];
@@ -130,7 +131,7 @@ class AnimatedEvent {
     this._attachedEvent && this._attachedEvent.detach();
   }
 
-  __getHandler() {
+  __getHandler(): any | ((...args: any) => void) {
     if (this.__isNative) {
       return this._callListeners;
     }
@@ -158,7 +159,7 @@ class AnimatedEvent {
     };
   }
 
-  _callListeners(...args) {
+  _callListeners(...args: any) {
     this._listeners.forEach(listener => listener(...args));
   }
 

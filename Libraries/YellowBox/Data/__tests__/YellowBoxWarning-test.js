@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,17 +11,17 @@
 
 'use strict';
 
-import type {StackFrame} from 'parseErrorStack';
+import type {StackFrame} from '../../../Core/NativeExceptionsManager';
 
-jest.mock('YellowBoxSymbolication');
+jest.mock('../YellowBoxSymbolication');
 
 const YellowBoxSymbolication: {|
   symbolicate: JestMockFn<
     $ReadOnlyArray<Array<StackFrame>>,
     Promise<Array<StackFrame>>,
   >,
-|} = (require('YellowBoxSymbolication'): any);
-const YellowBoxWarning = require('YellowBoxWarning');
+|} = (require('../YellowBoxSymbolication'): any);
+const YellowBoxWarning = require('../YellowBoxWarning');
 
 const createStack = methodNames =>
   methodNames.map(methodName => ({

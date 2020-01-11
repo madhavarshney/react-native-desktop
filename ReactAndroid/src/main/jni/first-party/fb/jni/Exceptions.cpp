@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -122,13 +122,13 @@ void throwPendingJniExceptionAsCppException() {
     return;
   }
 
-  auto throwable = adopt_local(env->ExceptionOccurred());
+  auto throwable = env->ExceptionOccurred();
   if (!throwable) {
     throw std::runtime_error("Unable to get pending JNI exception.");
   }
   env->ExceptionClear();
 
-  throw JniException(throwable);
+  throw JniException(adopt_local(throwable));
 }
 
 void throwCppExceptionIf(bool condition) {

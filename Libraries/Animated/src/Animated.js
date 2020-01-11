@@ -1,29 +1,42 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
- * @flow strict-local
+ * @flow
  * @format
  */
 
 'use strict';
 
-const AnimatedImplementation = require('AnimatedImplementation');
-const FlatList = require('FlatList');
-const Image = require('Image');
-const ScrollView = require('ScrollView');
-const SectionList = require('SectionList');
-const Text = require('Text');
-const View = require('View');
+import Platform from '../../Utilities/Platform';
+
+const AnimatedMock = require('./AnimatedMock');
+const AnimatedImplementation = require('./AnimatedImplementation');
+
+const Animated = ((Platform.isTesting
+  ? AnimatedMock
+  : AnimatedImplementation): typeof AnimatedMock);
 
 module.exports = {
-  ...AnimatedImplementation,
-  View: AnimatedImplementation.createAnimatedComponent(View),
-  Text: AnimatedImplementation.createAnimatedComponent(Text),
-  Image: AnimatedImplementation.createAnimatedComponent(Image),
-  ScrollView: AnimatedImplementation.createAnimatedComponent(ScrollView),
-  FlatList: AnimatedImplementation.createAnimatedComponent(FlatList),
-  SectionList: AnimatedImplementation.createAnimatedComponent(SectionList),
+  get FlatList(): any {
+    return require('./components/AnimatedFlatList');
+  },
+  get Image(): any {
+    return require('./components/AnimatedImage');
+  },
+  get ScrollView(): any {
+    return require('./components/AnimatedScrollView');
+  },
+  get SectionList(): any {
+    return require('./components/AnimatedSectionList');
+  },
+  get Text(): any {
+    return require('./components/AnimatedText');
+  },
+  get View(): any {
+    return require('./components/AnimatedView');
+  },
+  ...Animated,
 };

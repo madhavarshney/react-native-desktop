@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -9,10 +9,10 @@
  */
 'use strict';
 
-const RCTActionSheetManager = require('NativeModules').ActionSheetManager;
+import RCTActionSheetManager from './NativeActionSheetManager';
 
-const invariant = require('fbjs/lib/invariant');
-const processColor = require('processColor');
+const invariant = require('invariant');
+const processColor = require('../StyleSheet/processColor');
 
 /**
  * Display action sheets and share sheets on iOS.
@@ -27,7 +27,7 @@ const ActionSheetIOS = {
    *
    * - `options` (array of strings) - a list of button titles (required)
    * - `cancelButtonIndex` (int) - index of cancel button in `options`
-   * - `destructiveButtonIndex` (int) - index of destructive button in `options`
+   * - `destructiveButtonIndex` (int or array of ints) - index or indices of destructive buttons in `options`
    * - `title` (string) - a title to show above the action sheet
    * - `message` (string) - a message to show below the title
    *
@@ -53,9 +53,12 @@ const ActionSheetIOS = {
       'Options must be a valid object',
     );
     invariant(typeof callback === 'function', 'Must provide a valid callback');
+    invariant(RCTActionSheetManager, "ActionSheetManager does't exist");
+
+    const {tintColor, ...remainingOptions} = options;
 
     RCTActionSheetManager.showActionSheetWithOptions(
-      {...options, tintColor: processColor(options.tintColor)},
+      {...remainingOptions, tintColor: processColor(tintColor)},
       callback,
     );
   },
@@ -100,6 +103,7 @@ const ActionSheetIOS = {
       typeof successCallback === 'function',
       'Must provide a valid successCallback',
     );
+    invariant(RCTActionSheetManager, "ActionSheetManager does't exist");
     RCTActionSheetManager.showShareActionSheetWithOptions(
       {...options, tintColor: processColor(options.tintColor)},
       failureCallback,

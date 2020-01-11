@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,10 +10,10 @@
 
 'use strict';
 
-const Platform = require('Platform');
-const TVNavigationEventEmitter = require('NativeModules')
-  .TVNavigationEventEmitter;
-const NativeEventEmitter = require('NativeEventEmitter');
+const Platform = require('../../Utilities/Platform');
+const NativeEventEmitter = require('../../EventEmitter/NativeEventEmitter');
+
+import NativeTVNavigationEventEmitter from './NativeTVNavigationEventEmitter';
 
 function TVEventHandler() {
   this.__nativeTVNavigationEventListener = null;
@@ -24,12 +24,12 @@ TVEventHandler.prototype.enable = function(
   component: ?any,
   callback: Function,
 ) {
-  if (Platform.OS === 'ios' && !TVNavigationEventEmitter) {
+  if (Platform.OS === 'ios' && !NativeTVNavigationEventEmitter) {
     return;
   }
 
   this.__nativeTVNavigationEventEmitter = new NativeEventEmitter(
-    TVNavigationEventEmitter,
+    NativeTVNavigationEventEmitter,
   );
   this.__nativeTVNavigationEventListener = this.__nativeTVNavigationEventEmitter.addListener(
     'onHWKeyEvent',

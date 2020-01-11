@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -32,17 +32,6 @@ const QuickPerformanceLogger = {
   ): void {
     if (global.nativeQPLMarkerEnd) {
       global.nativeQPLMarkerEnd(markerId, instanceKey, actionId, timestamp);
-    }
-  },
-
-  markerNote(
-    markerId: number,
-    actionId: number,
-    instanceKey: number = DUMMY_INSTANCE_KEY,
-    timestamp: number = AUTO_SET_TIMESTAMP,
-  ): void {
-    if (global.nativeQPLMarkerNote) {
-      global.nativeQPLMarkerNote(markerId, instanceKey, actionId, timestamp);
     }
   },
 

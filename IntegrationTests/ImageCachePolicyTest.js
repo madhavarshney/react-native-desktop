@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -36,9 +36,9 @@ type State = {
 };
 
 class ImageCachePolicyTest extends React.Component<Props, $FlowFixMeState> {
-  state = {};
+  state: $FlowFixMe | $TEMPORARY$object<{||}> = {};
 
-  shouldComponentUpdate(nextProps: Props, nextState: State) {
+  shouldComponentUpdate(nextProps: Props, nextState: State): boolean {
     const results: Array<?boolean> = TESTS.map(x => nextState[x]);
 
     if (!results.includes(undefined)) {
@@ -56,9 +56,9 @@ class ImageCachePolicyTest extends React.Component<Props, $FlowFixMeState> {
     this.setState({[name]: pass});
   }
 
-  render() {
+  render(): React.Node {
     return (
-      <View style={{flex: 1}}>
+      <View style={styles.container}>
         <Text>Hello</Text>
         <Image
           source={{
@@ -110,6 +110,9 @@ class ImageCachePolicyTest extends React.Component<Props, $FlowFixMeState> {
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   base: {
     width: 100,
     height: 100,

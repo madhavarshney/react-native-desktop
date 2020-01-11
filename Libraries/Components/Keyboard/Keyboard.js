@@ -1,23 +1,25 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  *
  * @format
- * @flow
+ * @flow strict-local
  */
 
 'use strict';
 
-const LayoutAnimation = require('LayoutAnimation');
-const invariant = require('fbjs/lib/invariant');
-const NativeEventEmitter = require('NativeEventEmitter');
-const KeyboardObserver = require('NativeModules').KeyboardObserver;
-const dismissKeyboard = require('dismissKeyboard');
-const KeyboardEventEmitter = new NativeEventEmitter(KeyboardObserver);
+const LayoutAnimation = require('../../LayoutAnimation/LayoutAnimation');
+const NativeEventEmitter = require('../../EventEmitter/NativeEventEmitter');
 
-type KeyboardEventName =
+const dismissKeyboard = require('../../Utilities/dismissKeyboard');
+const invariant = require('invariant');
+
+import NativeKeyboardObserver from './NativeKeyboardObserver';
+const KeyboardEventEmitter = new NativeEventEmitter(NativeKeyboardObserver);
+
+export type KeyboardEventName =
   | 'keyboardWillShow'
   | 'keyboardDidShow'
   | 'keyboardWillHide'
@@ -25,18 +27,38 @@ type KeyboardEventName =
   | 'keyboardWillChangeFrame'
   | 'keyboardDidChangeFrame';
 
-type ScreenRect = $ReadOnly<{|
+export type KeyboardEventEasing =
+  | 'easeIn'
+  | 'easeInEaseOut'
+  | 'easeOut'
+  | 'linear'
+  | 'keyboard';
+
+export type KeyboardEventCoordinates = $ReadOnly<{|
   screenX: number,
   screenY: number,
   width: number,
   height: number,
 |}>;
 
-export type KeyboardEvent = $ReadOnly<{|
-  duration?: number,
-  easing?: string,
-  endCoordinates: ScreenRect,
-  startCoordinates?: ScreenRect,
+export type KeyboardEvent = AndroidKeyboardEvent | IOSKeyboardEvent;
+
+type BaseKeyboardEvent = {|
+  duration: number,
+  easing: KeyboardEventEasing,
+  endCoordinates: KeyboardEventCoordinates,
+|};
+
+export type AndroidKeyboardEvent = $ReadOnly<{|
+  ...BaseKeyboardEvent,
+  duration: 0,
+  easing: 'keyboard',
+|}>;
+
+export type IOSKeyboardEvent = $ReadOnly<{|
+  ...BaseKeyboardEvent,
+  startCoordinates: KeyboardEventCoordinates,
+  isEventFromThisApp: boolean,
 |}>;
 
 type KeyboardEventListener = (e: KeyboardEvent) => void;
@@ -87,7 +109,21 @@ type KeyboardEventListener = (e: KeyboardEvent) => void;
  *```
  */
 
-let Keyboard = {
+let Keyboard:
+  | NativeEventEmitter
+  | $TEMPORARY$object<{|
+      addListener: (
+        eventName: KeyboardEventName,
+        callback: KeyboardEventListener,
+      ) => $FlowFixMe,
+      dismiss: () => $FlowFixMe,
+      removeAllListeners: (eventName: KeyboardEventName) => $FlowFixMe,
+      removeListener: (
+        eventName: KeyboardEventName,
+        callback: KeyboardEventListener,
+      ) => $FlowFixMe,
+      scheduleLayoutAnimation: (event: KeyboardEvent) => $FlowFixMe,
+    |}> = {
   /**
    * The `addListener` function connects a JavaScript function to an identified native
    * keyboard notification event.
@@ -121,7 +157,10 @@ let Keyboard = {
    * @param {string} eventName The `nativeEvent` is the string that identifies the event you're listening for.
    * @param {function} callback function to be called when the event fires.
    */
-  removeListener(eventName: KeyboardEventName, callback: Function) {
+  removeListener(
+    eventName: KeyboardEventName,
+    callback: KeyboardEventListener,
+  ) {
     invariant(false, 'Dummy method used for documentation');
   },
 
@@ -155,12 +194,12 @@ Keyboard = KeyboardEventEmitter;
 Keyboard.dismiss = dismissKeyboard;
 Keyboard.scheduleLayoutAnimation = function(event: KeyboardEvent) {
   const {duration, easing} = event;
-  if (duration) {
+  if (duration != null && duration !== 0) {
     LayoutAnimation.configureNext({
       duration: duration,
       update: {
         duration: duration,
-        type: (easing && LayoutAnimation.Types[easing]) || 'keyboard',
+        type: (easing != null && LayoutAnimation.Types[easing]) || 'keyboard',
       },
     });
   }

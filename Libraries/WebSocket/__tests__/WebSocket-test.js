@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,14 +10,14 @@
 
 'use strict';
 
-jest.enableAutomock().unmock('WebSocket');
-jest.setMock('NativeModules', {
+jest.mock('../../EventEmitter/NativeEventEmitter');
+jest.setMock('../../BatchedBridge/NativeModules', {
   WebSocketModule: {
     connect: () => {},
   },
 });
 
-const WebSocket = require('WebSocket');
+const WebSocket = require('../WebSocket');
 
 describe('WebSocket', function() {
   it('should have connection lifecycle constants defined on the class', () => {

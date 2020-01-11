@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,12 +10,11 @@
 
 'use strict';
 
-const InteractionManager = require('InteractionManager');
-const React = require('React');
-
+const InteractionManager = require('../Interaction/InteractionManager');
 const PropTypes = require('prop-types');
+const React = require('react');
 
-const infoLog = require('infoLog');
+const infoLog = require('../Utilities/infoLog');
 
 const DEBUG = false;
 
@@ -90,14 +89,12 @@ export type Props = {
    * Tags instances and associated tasks for easier debugging.
    */
   name: string,
-  children?: any,
-};
-type DefaultProps = {
-  name: string,
+  children: React.Node,
 };
 type State = {
   doIncrementalRender: boolean,
 };
+
 class Incremental extends React.Component<Props, State> {
   props: Props;
   state: State;
@@ -106,11 +103,16 @@ class Incremental extends React.Component<Props, State> {
   _mounted: boolean;
   _rendered: boolean;
 
-  static defaultProps = {
+  static defaultProps: $TEMPORARY$object<{|name: string|}> = {
     name: '',
   };
 
-  static contextTypes = {
+  static contextTypes:
+    | any
+    | $TEMPORARY$object<{|
+        incrementalGroup: React$PropType$Primitive<any>,
+        incrementalGroupEnabled: React$PropType$Primitive<boolean>,
+      |}> = {
     incrementalGroup: PropTypes.object,
     incrementalGroupEnabled: PropTypes.bool,
   };

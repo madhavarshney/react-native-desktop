@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,12 +10,11 @@
 
 'use strict';
 
-const InspectorAgent = require('InspectorAgent');
-const JSInspector = require('JSInspector');
-const Map = require('Map');
-const XMLHttpRequest = require('XMLHttpRequest');
+const InspectorAgent = require('./InspectorAgent');
+const JSInspector = require('./JSInspector');
+const XMLHttpRequest = require('../Network/XMLHttpRequest');
 
-import type EventSender from 'InspectorAgent';
+import type EventSender from './InspectorAgent';
 
 type RequestId = string;
 
@@ -252,7 +251,7 @@ type EnableArgs = {
 };
 
 class NetworkAgent extends InspectorAgent {
-  static DOMAIN = 'Network';
+  static DOMAIN: $TEMPORARY$string<'Network'> = 'Network';
 
   _sendEvent: EventSender;
   _interceptor: ?Interceptor;

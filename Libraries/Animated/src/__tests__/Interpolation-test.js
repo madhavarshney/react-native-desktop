@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,7 @@
 'use strict';
 
 const AnimatedInterpolation = require('../nodes/AnimatedInterpolation');
-const Easing = require('Easing');
+const Easing = require('../Easing');
 
 describe('Interpolation', () => {
   it('should work with defaults', () => {

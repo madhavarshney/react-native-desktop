@@ -1,10 +1,9 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
+ * <p>This source code is licensed under the MIT license found in the LICENSE file in the root
+ * directory of this source tree.
  */
-
 package com.facebook.react.uimanager.events;
 
 import android.util.LongSparseArray;
@@ -20,67 +19,66 @@ import com.facebook.systrace.Systrace;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import javax.annotation.Nullable;
 
 /**
  * Class responsible for dispatching UI events to JS. The main purpose of this class is to act as an
  * intermediary between UI code generating events and JS, making sure we don't send more events than
  * JS can process.
  *
- * To use it, create a subclass of {@link Event} and call {@link #dispatchEvent(Event)} whenever
+ * <p>To use it, create a subclass of {@link Event} and call {@link #dispatchEvent(Event)} whenever
  * there's a UI event to dispatch.
  *
- * This class works by installing a Choreographer frame callback on the main thread. This callback
- * then enqueues a runnable on the JS thread (if one is not already pending) that is responsible for
- * actually dispatch events to JS. This implementation depends on the properties that
- *   1) FrameCallbacks run after UI events have been processed in Choreographer.java
- *   2) when we enqueue a runnable on the JS queue thread, it won't be called until after any
- *      previously enqueued JS jobs have finished processing
+ * <p>This class works by installing a Choreographer frame callback on the main thread. This
+ * callback then enqueues a runnable on the JS thread (if one is not already pending) that is
+ * responsible for actually dispatch events to JS. This implementation depends on the properties
+ * that 1) FrameCallbacks run after UI events have been processed in Choreographer.java 2) when we
+ * enqueue a runnable on the JS queue thread, it won't be called until after any previously enqueued
+ * JS jobs have finished processing
  *
- * If JS is taking a long time processing events, then the UI events generated on the  UI thread can
- * be coalesced into fewer events so that when the runnable runs, we don't overload JS with a ton
- * of events and make it get even farther behind.
+ * <p>If JS is taking a long time processing events, then the UI events generated on the UI thread
+ * can be coalesced into fewer events so that when the runnable runs, we don't overload JS with a
+ * ton of events and make it get even farther behind.
  *
- * Ideally, we don't need this and JS is fast enough to process all the events each frame, but bad
- * things happen, including load on CPUs from the system, and we should handle this case well.
+ * <p>Ideally, we don't need this and JS is fast enough to process all the events each frame, but
+ * bad things happen, including load on CPUs from the system, and we should handle this case well.
  *
- * == Event Cookies ==
+ * <p>== Event Cookies ==
  *
- * An event cookie is made up of the event type id, view tag, and a custom coalescing key. Only
+ * <p>An event cookie is made up of the event type id, view tag, and a custom coalescing key. Only
  * Events that have the same cookie can be coalesced.
  *
- * Event Cookie Composition:
- * VIEW_TAG_MASK =       0x00000000ffffffff
- * EVENT_TYPE_ID_MASK =  0x0000ffff00000000
- * COALESCING_KEY_MASK = 0xffff000000000000
+ * <p>Event Cookie Composition: VIEW_TAG_MASK = 0x00000000ffffffff EVENT_TYPE_ID_MASK =
+ * 0x0000ffff00000000 COALESCING_KEY_MASK = 0xffff000000000000
  */
 public class EventDispatcher implements LifecycleEventListener {
 
-  private static final Comparator<Event> EVENT_COMPARATOR = new Comparator<Event>() {
-    @Override
-    public int compare(Event lhs, Event rhs) {
-      if (lhs == null && rhs == null) {
-        return 0;
-      }
-      if (lhs == null) {
-        return -1;
-      }
-      if (rhs == null) {
-        return 1;
-      }
+  private static final Comparator<Event> EVENT_COMPARATOR =
+      new Comparator<Event>() {
+        @Override
+        public int compare(Event lhs, Event rhs) {
+          if (lhs == null && rhs == null) {
+            return 0;
+          }
+          if (lhs == null) {
+            return -1;
+          }
+          if (rhs == null) {
+            return 1;
+          }
 
-      long diff = lhs.getTimestampMs() - rhs.getTimestampMs();
-      if (diff == 0) {
-        return 0;
-      } else if (diff < 0) {
-        return -1;
-      } else {
-        return 1;
-      }
-    }
-  };
+          long diff = lhs.getTimestampMs() - rhs.getTimestampMs();
+          if (diff == 0) {
+            return 0;
+          } else if (diff < 0) {
+            return -1;
+          } else {
+            return 1;
+          }
+        }
+      };
 
   private final Object mEventsStagingLock = new Object();
   private final Object mEventsToDispatchLock = new Object();
@@ -90,8 +88,9 @@ public class EventDispatcher implements LifecycleEventListener {
   private final DispatchEventsRunnable mDispatchEventsRunnable = new DispatchEventsRunnable();
   private final ArrayList<Event> mEventStaging = new ArrayList<>();
   private final ArrayList<EventDispatcherListener> mListeners = new ArrayList<>();
+  private final List<BatchEventDispatchedListener> mPostEventDispatchListeners = new ArrayList<>();
   private final ScheduleDispatchFrameCallback mCurrentFrameCallback =
-    new ScheduleDispatchFrameCallback();
+      new ScheduleDispatchFrameCallback();
   private final AtomicInteger mHasDispatchScheduledCount = new AtomicInteger();
 
   private Event[] mEventsToDispatch = new Event[16];
@@ -106,9 +105,7 @@ public class EventDispatcher implements LifecycleEventListener {
     mReactEventEmitter = new ReactEventEmitter(mReactContext);
   }
 
-  /**
-   * Sends the given Event to JS, coalescing eligible events if JS is backed up.
-   */
+  /** Sends the given Event to JS, coalescing eligible events if JS is backed up. */
   public void dispatchEvent(Event event) {
     Assertions.assertCondition(event.isInitialized(), "Dispatched event hasn't been initialized");
 
@@ -119,10 +116,16 @@ public class EventDispatcher implements LifecycleEventListener {
     synchronized (mEventsStagingLock) {
       mEventStaging.add(event);
       Systrace.startAsyncFlow(
-          Systrace.TRACE_TAG_REACT_JAVA_BRIDGE,
-          event.getEventName(),
-          event.getUniqueID());
+          Systrace.TRACE_TAG_REACT_JAVA_BRIDGE, event.getEventName(), event.getUniqueID());
     }
+    maybePostFrameCallbackFromNonUI();
+  }
+
+  public void dispatchAllEvents() {
+    maybePostFrameCallbackFromNonUI();
+  }
+
+  private void maybePostFrameCallbackFromNonUI() {
     if (mReactEventEmitter != null) {
       // If the host activity is paused, the frame callback may not be currently
       // posted. Ensure that it is so that this event gets delivered promptly.
@@ -135,27 +138,27 @@ public class EventDispatcher implements LifecycleEventListener {
     }
   }
 
-  public void dispatchAllEvents() {
-    mCurrentFrameCallback.maybePostFromNonUI();
-  }
-
-  /**
-   * Add a listener to this EventDispatcher.
-   */
+  /** Add a listener to this EventDispatcher. */
   public void addListener(EventDispatcherListener listener) {
     mListeners.add(listener);
   }
 
-  /**
-   * Remove a listener from this EventDispatcher.
-   */
+  /** Remove a listener from this EventDispatcher. */
   public void removeListener(EventDispatcherListener listener) {
     mListeners.remove(listener);
   }
 
+  public void addBatchEventDispatchedListener(BatchEventDispatchedListener listener) {
+    mPostEventDispatchListeners.add(listener);
+  }
+
+  public void removeBatchEventDispatchedListener(BatchEventDispatchedListener listener) {
+    mPostEventDispatchListeners.remove(listener);
+  }
+
   @Override
   public void onHostResume() {
-    mCurrentFrameCallback.maybePostFromNonUI();
+    maybePostFrameCallbackFromNonUI();
   }
 
   @Override
@@ -169,12 +172,13 @@ public class EventDispatcher implements LifecycleEventListener {
   }
 
   public void onCatalystInstanceDestroyed() {
-    UiThreadUtil.runOnUiThread(new Runnable() {
-      @Override
-      public void run() {
-        stopFrameCallback();
-      }
-    });
+    UiThreadUtil.runOnUiThread(
+        new Runnable() {
+          @Override
+          public void run() {
+            stopFrameCallback();
+          }
+        });
   }
 
   private void stopFrameCallback() {
@@ -199,10 +203,8 @@ public class EventDispatcher implements LifecycleEventListener {
             continue;
           }
 
-          long eventCookie = getEventCookie(
-              event.getViewTag(),
-              event.getEventName(),
-              event.getCoalescingKey());
+          long eventCookie =
+              getEventCookie(event.getViewTag(), event.getEventName(), event.getCoalescingKey());
 
           Event eventToAdd = null;
           Event eventToDispose = null;
@@ -249,9 +251,9 @@ public class EventDispatcher implements LifecycleEventListener {
   }
 
   private static long getEventCookie(int viewTag, short eventTypeId, short coalescingKey) {
-    return viewTag |
-        (((long) eventTypeId) & 0xffff) << 32 |
-        (((long) coalescingKey) & 0xffff) << 48;
+    return viewTag
+        | (((long) eventTypeId) & 0xffff) << 32
+        | (((long) coalescingKey) & 0xffff) << 48;
   }
 
   public void registerEventEmitter(@UIManagerType int uiManagerType, RCTEventEmitter eventEmitter) {
@@ -318,12 +320,13 @@ public class EventDispatcher implements LifecycleEventListener {
       if (mReactContext.isOnUiQueueThread()) {
         maybePost();
       } else {
-        mReactContext.runOnUiQueueThread(new Runnable() {
-          @Override
-          public void run() {
-            maybePost();
-          }
-        });
+        mReactContext.runOnUiQueueThread(
+            new Runnable() {
+              @Override
+              public void run() {
+                maybePost();
+              }
+            });
       }
     }
   }
@@ -361,6 +364,9 @@ public class EventDispatcher implements LifecycleEventListener {
             clearEventsToDispatch();
             mEventCookieToLastEventIdx.clear();
           }
+        }
+        for (BatchEventDispatchedListener listener : mPostEventDispatchListeners) {
+          listener.onBatchEventDispatched();
         }
       } finally {
         Systrace.endSection(Systrace.TRACE_TAG_REACT_JAVA_BRIDGE);

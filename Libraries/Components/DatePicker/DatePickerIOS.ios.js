@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,23 +8,26 @@
  * This is a controlled component version of RCTDatePickerIOS
  *
  * @format
- * @flow
+ * @flow strict-local
  */
 
 'use strict';
 
-const React = require('React');
-const invariant = require('fbjs/lib/invariant');
-const StyleSheet = require('StyleSheet');
-const View = require('View');
+const RCTDatePickerNativeComponent = require('./RCTDatePickerNativeComponent');
+const React = require('react');
+const StyleSheet = require('../../StyleSheet/StyleSheet');
+const View = require('../View/View');
 
-const requireNativeComponent = require('requireNativeComponent');
+const invariant = require('invariant');
 
-import type {ViewProps} from 'ViewPropTypes';
+import type {SyntheticEvent} from '../../Types/CoreEventTypes';
+import type {ViewProps} from '../View/ViewPropTypes';
 
-const RCTDatePickerIOS = requireNativeComponent('RCTDatePicker');
-
-type Event = Object;
+type Event = SyntheticEvent<
+  $ReadOnly<{|
+    timestamp: number,
+  |}>,
+>;
 
 type Props = $ReadOnly<{|
   ...ViewProps,
@@ -109,12 +112,13 @@ type Props = $ReadOnly<{|
  * source of truth.
  */
 class DatePickerIOS extends React.Component<Props> {
-  static DefaultProps = {
+  static DefaultProps: $TEMPORARY$object<{|
+    mode: $TEMPORARY$string<'datetime'>,
+  |}> = {
     mode: 'datetime',
   };
 
-  // $FlowFixMe How to type a native component to be able to call setNativeProps
-  _picker: ?React.ElementRef<typeof RCTDatePickerIOS> = null;
+  _picker: ?React.ElementRef<typeof RCTDatePickerNativeComponent> = null;
 
   componentDidUpdate() {
     if (this.props.date) {
@@ -134,7 +138,7 @@ class DatePickerIOS extends React.Component<Props> {
     this.props.onChange && this.props.onChange(event);
   };
 
-  render() {
+  render(): React.Node {
     const props = this.props;
     invariant(
       props.date || props.initialDate,
@@ -142,7 +146,8 @@ class DatePickerIOS extends React.Component<Props> {
     );
     return (
       <View style={props.style}>
-        <RCTDatePickerIOS
+        <RCTDatePickerNativeComponent
+          testID={props.testID}
           ref={picker => {
             this._picker = picker;
           }}
@@ -151,10 +156,14 @@ class DatePickerIOS extends React.Component<Props> {
             props.date
               ? props.date.getTime()
               : props.initialDate
-                ? props.initialDate.getTime()
-                : undefined
+              ? props.initialDate.getTime()
+              : undefined
           }
-          locale={props.locale ? props.locale : undefined}
+          locale={
+            props.locale != null && props.locale !== ''
+              ? props.locale
+              : undefined
+          }
           maximumDate={
             props.maximumDate ? props.maximumDate.getTime() : undefined
           }

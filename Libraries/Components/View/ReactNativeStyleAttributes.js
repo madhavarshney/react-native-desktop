@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,20 +10,20 @@
 
 'use strict';
 
-const ImageStylePropTypes = require('ImageStylePropTypes');
-const TextStylePropTypes = require('TextStylePropTypes');
-const ViewStylePropTypes = require('ViewStylePropTypes');
+const DeprecatedImageStylePropTypes = require('../../DeprecatedPropTypes/DeprecatedImageStylePropTypes');
+const DeprecatedTextStylePropTypes = require('../../DeprecatedPropTypes/DeprecatedTextStylePropTypes');
+const DeprecatedViewStylePropTypes = require('../../DeprecatedPropTypes/DeprecatedViewStylePropTypes');
 
-const processColor = require('processColor');
-const processTransform = require('processTransform');
-const sizesDiffer = require('sizesDiffer');
+const processColor = require('../../StyleSheet/processColor');
+const processTransform = require('../../StyleSheet/processTransform');
+const sizesDiffer = require('../../Utilities/differ/sizesDiffer');
 
 const ReactNativeStyleAttributes = {};
 
 for (const attributeName of Object.keys({
-  ...ViewStylePropTypes,
-  ...TextStylePropTypes,
-  ...ImageStylePropTypes,
+  ...DeprecatedViewStylePropTypes,
+  ...DeprecatedTextStylePropTypes,
+  ...DeprecatedImageStylePropTypes,
 })) {
   ReactNativeStyleAttributes[attributeName] = true;
 }

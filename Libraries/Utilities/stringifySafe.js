@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -29,6 +29,8 @@ function stringifySafe(arg: any): string {
     } catch (e) {
       ret = '[function unknown]';
     }
+  } else if (arg instanceof Error) {
+    ret = arg.name + ': ' + arg.message;
   } else {
     // Perform a try catch, just in case the object has a circular
     // reference or stringify throws for some other reason.

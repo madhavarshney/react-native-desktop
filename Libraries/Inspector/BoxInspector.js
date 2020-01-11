@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,11 +10,12 @@
 
 'use strict';
 
-const React = require('React');
-const StyleSheet = require('StyleSheet');
-const Text = require('Text');
-const View = require('View');
-const resolveBoxStyle = require('resolveBoxStyle');
+const React = require('react');
+const StyleSheet = require('../StyleSheet/StyleSheet');
+const Text = require('../Text/Text');
+const View = require('../Components/View/View');
+
+const resolveBoxStyle = require('./resolveBoxStyle');
 
 const blank = {
   top: 0,
@@ -24,7 +25,7 @@ const blank = {
 };
 
 class BoxInspector extends React.Component<$FlowFixMeProps> {
-  render() {
+  render(): React.Node {
     const frame = this.props.frame;
     const style = this.props.style;
     const margin = (style && resolveBoxStyle('margin', style)) || blank;
@@ -86,12 +87,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'left',
     top: -3,
-  },
-  buffer: {
-    fontSize: 10,
-    color: 'yellow',
-    flex: 1,
-    textAlign: 'center',
   },
   innerText: {
     color: 'yellow',

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,52 +10,63 @@
 
 'use strict';
 
-const AppRegistry = require('AppRegistry');
-const AsyncStorage = require('AsyncStorage');
-const BackHandler = require('BackHandler');
-const Dimensions = require('Dimensions');
-const DrawerLayoutAndroid = require('DrawerLayoutAndroid');
-const Linking = require('Linking');
 const React = require('react');
-const StatusBar = require('StatusBar');
-const StyleSheet = require('StyleSheet');
-const ToolbarAndroid = require('ToolbarAndroid');
-const RNTesterActions = require('./RNTesterActions');
-const RNTesterExampleContainer = require('./RNTesterExampleContainer');
-const RNTesterExampleList = require('./RNTesterExampleList');
-/* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was found when
- * making Flow check .android.js files. */
-const RNTesterList = require('./RNTesterList');
-const RNTesterNavigationReducer = require('./RNTesterNavigationReducer');
-const UIManager = require('UIManager');
-const URIActionMap = require('./URIActionMap');
-const View = require('View');
+const {
+  AppRegistry,
+  AsyncStorage,
+  BackHandler,
+  Dimensions,
+  DrawerLayoutAndroid,
+  Image,
+  Linking,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TouchableWithoutFeedback,
+  UIManager,
+  View,
+} = require('react-native');
+const RNTesterActions = require('./utils/RNTesterActions');
+const RNTesterExampleContainer = require('./components/RNTesterExampleContainer');
+const RNTesterExampleList = require('./components/RNTesterExampleList');
+const RNTesterList = require('./utils/RNTesterList');
+const RNTesterNavigationReducer = require('./utils/RNTesterNavigationReducer');
+const URIActionMap = require('./utils/URIActionMap');
 
-const nativeImageSource = require('nativeImageSource');
+const nativeImageSource = require('../../Libraries/Image/nativeImageSource');
 
-import type {RNTesterNavigationState} from './RNTesterNavigationReducer';
+import type {RNTesterNavigationState} from './utils/RNTesterNavigationReducer';
 
 UIManager.setLayoutAnimationEnabledExperimental(true);
 
 const DRAWER_WIDTH_LEFT = 56;
 
 type Props = {
-  exampleFromAppetizeParams: string,
+  exampleFromAppetizeParams?: ?string,
 };
 
 const APP_STATE_KEY = 'RNTesterAppState.v2';
-
-const HEADER_LOGO_ICON = nativeImageSource({
-  android: 'launcher_icon',
-  width: 132,
-  height: 144,
-});
 
 const HEADER_NAV_ICON = nativeImageSource({
   android: 'ic_menu_black_24dp',
   width: 48,
   height: 48,
 });
+
+const Header = ({title, onPressDrawer}) => {
+  return (
+    <View style={styles.toolbar}>
+      <View style={styles.toolbarCenter}>
+        <Text style={styles.title}>{title}</Text>
+      </View>
+      <View style={styles.toolbarLeft}>
+        <TouchableWithoutFeedback onPress={onPressDrawer}>
+          <Image source={HEADER_NAV_ICON} />
+        </TouchableWithoutFeedback>
+      </View>
+    </View>
+  );
+};
 
 class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
   UNSAFE_componentWillMount() {
@@ -94,7 +105,7 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
     }
     return (
       <DrawerLayoutAndroid
-        drawerPosition={DrawerLayoutAndroid.positions.Left}
+        drawerPosition="left"
         drawerWidth={Dimensions.get('window').width - DRAWER_WIDTH_LEFT}
         keyboardDismissMode="on-drag"
         onDrawerOpen={() => {
@@ -122,8 +133,6 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
   _renderDrawerContent = () => {
     return (
       <View style={styles.drawerContentWrapper}>
-        {/* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was
-          * found when making Flow check .android.js files. */}
         <RNTesterExampleList
           list={RNTesterList}
           displayTitleRow={true}
@@ -155,14 +164,11 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
       } else if (ExampleModule) {
         return (
           <View style={styles.container}>
-            <ToolbarAndroid
-              logo={HEADER_LOGO_ICON}
-              navIcon={HEADER_NAV_ICON}
+            <Header
+              title={ExampleModule.title}
               /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue
                * was found when making Flow check .android.js files. */
-              onIconClicked={() => this.drawer.openDrawer()}
-              style={styles.toolbar}
-              title={ExampleModule.title}
+              onPressDrawer={() => this.drawer.openDrawer()}
             />
             <RNTesterExampleContainer
               module={ExampleModule}
@@ -179,17 +185,12 @@ class RNTesterApp extends React.Component<Props, RNTesterNavigationState> {
 
     return (
       <View style={styles.container}>
-        <ToolbarAndroid
-          logo={HEADER_LOGO_ICON}
-          navIcon={HEADER_NAV_ICON}
-          /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was
-           * found when making Flow check .android.js files. */
-          onIconClicked={() => this.drawer.openDrawer()}
-          style={styles.toolbar}
+        <Header
           title="RNTester"
+          /* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue
+           * was found when making Flow check .android.js files. */
+          onPressDrawer={() => this.drawer.openDrawer()}
         />
-        {/* $FlowFixMe(>=0.78.0 site=react_native_android_fb) This issue was
-          * found when making Flow check .android.js files. */}
         <RNTesterExampleList
           onNavigate={this._handleAction}
           list={RNTesterList}
@@ -246,6 +247,22 @@ const styles = StyleSheet.create({
   toolbar: {
     backgroundColor: '#E9EAED',
     height: 56,
+  },
+  toolbarLeft: {
+    marginTop: 2,
+  },
+  toolbarCenter: {
+    flex: 1,
+    position: 'absolute',
+    top: 12,
+    left: 0,
+    right: 0,
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 19,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   drawerContentWrapper: {
     flex: 1,

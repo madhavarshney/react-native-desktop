@@ -1,18 +1,18 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "RCTWebSocketModule.h"
+#import <React/RCTWebSocketModule.h>
 
 #import <objc/runtime.h>
 
 #import <React/RCTConvert.h>
 #import <React/RCTUtils.h>
 
-#import "RCTSRWebSocket.h"
+#import <React/RCTSRWebSocket.h>
 
 @implementation RCTSRWebSocket (React)
 
@@ -112,9 +112,9 @@ RCT_EXPORT_METHOD(ping:(nonnull NSNumber *)socketID)
   [_sockets[socketID] sendPing:NULL];
 }
 
-RCT_EXPORT_METHOD(close:(nonnull NSNumber *)socketID)
+RCT_EXPORT_METHOD(close:(NSInteger)code reason:(NSString *)reason socketID:(nonnull NSNumber *)socketID)
 {
-  [_sockets[socketID] close];
+  [_sockets[socketID] closeWithCode:code reason:reason];
   [_sockets removeObjectForKey:socketID];
 }
 
@@ -155,7 +155,8 @@ RCT_EXPORT_METHOD(close:(nonnull NSNumber *)socketID)
 - (void)webSocketDidOpen:(RCTSRWebSocket *)webSocket
 {
   [self sendEventWithName:@"websocketOpen" body:@{
-    @"id": webSocket.reactTag
+    @"id": webSocket.reactTag,
+    @"protocol": webSocket.protocol ? webSocket.protocol : @""
   }];
 }
 

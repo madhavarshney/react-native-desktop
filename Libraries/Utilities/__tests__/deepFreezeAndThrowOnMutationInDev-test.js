@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2013-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -8,7 +8,7 @@
  * @emails oncall+react_native
  */
 
-const deepFreezeAndThrowOnMutationInDev = require('deepFreezeAndThrowOnMutationInDev');
+const deepFreezeAndThrowOnMutationInDev = require('../deepFreezeAndThrowOnMutationInDev');
 
 describe('deepFreezeAndThrowOnMutationInDev', function() {
   it('should be a noop on non object values', () => {
@@ -28,7 +28,7 @@ describe('deepFreezeAndThrowOnMutationInDev', function() {
 
   it('should not throw on object without prototype', () => {
     __DEV__ = true;
-    var o = Object.create(null);
+    const o = Object.create(null);
     o.key = 'Value';
     expect(() => deepFreezeAndThrowOnMutationInDev(o)).not.toThrow();
   });

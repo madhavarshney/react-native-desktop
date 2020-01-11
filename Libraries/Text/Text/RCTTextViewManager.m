@@ -1,11 +1,11 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
 
-#import "RCTTextViewManager.h"
+#import <React/RCTTextViewManager.h>
 
 #import <React/RCTAccessibilityManager.h>
 #import <React/RCTShadowView+Layout.h>
@@ -14,8 +14,8 @@
 #import <React/RCTUIManagerUtils.h>
 #import <React/RCTUIManagerObserverCoordinator.h>
 
-#import "RCTTextShadowView.h"
-#import "RCTTextView.h"
+#import <React/RCTTextShadowView.h>
+#import <React/RCTTextView.h>
 
 @interface RCTTextViewManager () <RCTUIManagerObserver>
 
@@ -24,7 +24,6 @@
 @implementation RCTTextViewManager
 {
   NSHashTable<RCTTextShadowView *> *_shadowViews;
-  CGFloat _fontSizeMultiplier;
 }
 
 RCT_EXPORT_MODULE(RCTText)

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -11,7 +11,7 @@
 'use strict';
 
 const React = require('react');
-const SectionList = require('SectionList');
+const SectionList = require('../SectionList');
 
 function renderMyListItem(info: {item: {title: string}, index: number}) {
   return <span />;
@@ -22,7 +22,7 @@ const renderMyHeader = ({section}: {section: {fooNumber: number} & Object}) => (
 );
 
 module.exports = {
-  testGoodDataWithGoodItem() {
+  testGoodDataWithGoodItem(): React.Node {
     const sections = [
       {
         key: 'a',
@@ -37,7 +37,7 @@ module.exports = {
     return <SectionList renderItem={renderMyListItem} sections={sections} />;
   },
 
-  testBadRenderItemFunction() {
+  testBadRenderItemFunction(): $TEMPORARY$array<React.Node> {
     const sections = [
       {
         key: 'a',

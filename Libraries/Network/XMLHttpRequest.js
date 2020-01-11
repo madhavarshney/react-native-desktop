@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,19 +10,13 @@
 
 'use strict';
 
+const BlobManager = require('../Blob/BlobManager');
 const EventTarget = require('event-target-shim');
-const RCTNetworking = require('RCTNetworking');
+const RCTNetworking = require('./RCTNetworking');
 
-/* $FlowFixMe(>=0.54.0 site=react_native_oss) This comment suppresses an error
- * found when Flow v0.54 was deployed. To see the error delete this comment and
- * run Flow. */
 const base64 = require('base64-js');
-const invariant = require('fbjs/lib/invariant');
-/* $FlowFixMe(>=0.54.0 site=react_native_oss) This comment suppresses an error
- * found when Flow v0.54 was deployed. To see the error delete this comment and
- * run Flow. */
+const invariant = require('invariant');
 const warning = require('fbjs/lib/warning');
-const BlobManager = require('BlobManager');
 
 export type NativeResponseType = 'base64' | 'blob' | 'text';
 export type ResponseType =
@@ -79,7 +73,7 @@ const REQUEST_EVENTS = [
 
 const XHR_EVENTS = REQUEST_EVENTS.concat('readystatechange');
 
-class XMLHttpRequestEventTarget extends EventTarget(...REQUEST_EVENTS) {
+class XMLHttpRequestEventTarget extends (EventTarget(...REQUEST_EVENTS): any) {
   onload: ?Function;
   onloadstart: ?Function;
   onprogress: ?Function;
@@ -92,7 +86,7 @@ class XMLHttpRequestEventTarget extends EventTarget(...REQUEST_EVENTS) {
 /**
  * Shared base for platform-specific XMLHttpRequest implementations.
  */
-class XMLHttpRequest extends EventTarget(...XHR_EVENTS) {
+class XMLHttpRequest extends (EventTarget(...XHR_EVENTS): any) {
   static UNSENT: number = UNSENT;
   static OPENED: number = OPENED;
   static HEADERS_RECEIVED: number = HEADERS_RECEIVED;
@@ -248,7 +242,7 @@ class XMLHttpRequest extends EventTarget(...XHR_EVENTS) {
           this._cachedResponse = BlobManager.createFromOptions(this._response);
         } else if (this._response === '') {
           this._cachedResponse = null;
-        } else { 
+        } else {
           throw new Error(`Invalid response for blob: ${this._response}`);
         }
         break;

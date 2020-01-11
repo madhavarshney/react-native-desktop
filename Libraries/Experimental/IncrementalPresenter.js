@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -10,14 +10,14 @@
 
 'use strict';
 
-const IncrementalGroup = require('IncrementalGroup');
-const React = require('React');
+const IncrementalGroup = require('./IncrementalGroup');
 const PropTypes = require('prop-types');
-const View = require('View');
+const React = require('react');
+const View = require('../Components/View/View');
 
-const ViewPropTypes = require('ViewPropTypes');
-
-import type {Context} from 'Incremental';
+import type {ViewStyleProp} from '../StyleSheet/StyleSheet';
+import type {LayoutEvent} from '../Types/CoreEventTypes';
+import type {Context} from './Incremental';
 
 /**
  * WARNING: EXPERIMENTAL. Breaking changes will probably happen a lot and will
@@ -31,26 +31,25 @@ import type {Context} from 'Incremental';
  *
  * See Incremental.js for more info.
  */
-type Props = {
+type Props = $ReadOnly<{|
   name: string,
   disabled?: boolean,
-  onDone?: () => void,
-  onLayout?: (event: Object) => void,
-  style?: mixed,
-  children?: any,
-};
+  onDone?: () => mixed,
+  onLayout?: (event: LayoutEvent) => mixed,
+  style?: ViewStyleProp,
+  children?: React.Node,
+|}>;
+
 class IncrementalPresenter extends React.Component<Props> {
   context: Context;
   _isDone: boolean;
 
-  static propTypes = {
-    name: PropTypes.string,
-    disabled: PropTypes.bool,
-    onDone: PropTypes.func,
-    onLayout: PropTypes.func,
-    style: ViewPropTypes.style,
-  };
-  static contextTypes = {
+  static contextTypes:
+    | any
+    | $TEMPORARY$object<{|
+        incrementalGroup: React$PropType$Primitive<any>,
+        incrementalGroupEnabled: React$PropType$Primitive<boolean>,
+      |}> = {
     incrementalGroup: PropTypes.object,
     incrementalGroupEnabled: PropTypes.bool,
   };
@@ -73,15 +72,16 @@ class IncrementalPresenter extends React.Component<Props> {
     }
     this.props.onDone && this.props.onDone();
   }
-  render() {
+  render(): React.Node {
+    let style: ViewStyleProp;
     if (
       this.props.disabled !== true &&
       this.context.incrementalGroupEnabled !== false &&
       !this._isDone
     ) {
-      var style = [this.props.style, {opacity: 0, position: 'absolute'}];
+      style = [this.props.style, {opacity: 0, position: 'absolute'}];
     } else {
-      var style = this.props.style;
+      style = this.props.style;
     }
     return (
       <IncrementalGroup

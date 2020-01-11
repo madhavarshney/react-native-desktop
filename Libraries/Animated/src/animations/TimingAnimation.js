@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -34,7 +34,7 @@ export type TimingAnimationConfigSingle = AnimationConfig & {
 let _easeInOut;
 function easeInOut() {
   if (!_easeInOut) {
-    const Easing = require('Easing');
+    const Easing = require('../Easing');
     _easeInOut = Easing.inOut(Easing.ease);
   }
   return _easeInOut;
@@ -55,20 +55,20 @@ class TimingAnimation extends Animation {
   constructor(config: TimingAnimationConfigSingle) {
     super();
     this._toValue = config.toValue;
-    this._easing = config.easing !== undefined ? config.easing : easeInOut();
-    this._duration = config.duration !== undefined ? config.duration : 500;
-    this._delay = config.delay !== undefined ? config.delay : 0;
-    this.__iterations = config.iterations !== undefined ? config.iterations : 1;
-    this.__isInteraction =
-      config.isInteraction !== undefined ? config.isInteraction : true;
+    this._easing = config.easing ?? easeInOut();
+    this._duration = config.duration ?? 500;
+    this._delay = config.delay ?? 0;
+    this.__iterations = config.iterations ?? 1;
     this._useNativeDriver = shouldUseNativeDriver(config);
+    this.__isInteraction = config.isInteraction ?? !this._useNativeDriver;
   }
 
   __getNativeAnimationConfig(): any {
     const frameDuration = 1000.0 / 60.0;
     const frames = [];
-    for (let dt = 0.0; dt < this._duration; dt += frameDuration) {
-      frames.push(this._easing(dt / this._duration));
+    const numFrames = Math.round(this._duration / frameDuration);
+    for (let frame = 0; frame < numFrames; frame++) {
+      frames.push(this._easing(frame / numFrames));
     }
     frames.push(this._easing(1));
     return {

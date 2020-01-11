@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -15,7 +15,7 @@ const ReactNative = require('react-native');
 const {NativeAppEventEmitter, StyleSheet, Text, View} = ReactNative;
 const {TestModule} = ReactNative.NativeModules;
 
-const deepDiffer = require('deepDiffer');
+const deepDiffer = require('react-native/Libraries/Utilities/differ/deepDiffer');
 
 const TEST_PAYLOAD = {foo: 'bar'};
 
@@ -36,7 +36,7 @@ class AppEventsTest extends React.Component<{}, State> {
     this.setState({sent: event});
   }
 
-  receiveEvent = (event: any) => {
+  receiveEvent: (event: any) => void = (event: any) => {
     if (deepDiffer(event.data, TEST_PAYLOAD)) {
       throw new Error('Received wrong event: ' + JSON.stringify(event));
     }
@@ -46,7 +46,7 @@ class AppEventsTest extends React.Component<{}, State> {
     });
   };
 
-  render() {
+  render(): React.Node {
     return (
       <View style={styles.container}>
         <Text>{JSON.stringify(this.state, null, '  ')}</Text>

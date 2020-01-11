@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -403,7 +403,12 @@ const parallel = function(
 
 const delay = function(time: number): CompositeAnimation {
   // Would be nice to make a specialized implementation
-  return timing(new AnimatedValue(0), {toValue: 0, delay: time, duration: 0});
+  return timing(new AnimatedValue(0), {
+    toValue: 0,
+    delay: time,
+    duration: 0,
+    useNativeDriver: false,
+  });
 };
 
 const stagger = function(
@@ -417,11 +422,14 @@ const stagger = function(
   );
 };
 
-type LoopAnimationConfig = {iterations: number};
+type LoopAnimationConfig = {
+  iterations: number,
+  resetBeforeIteration?: boolean,
+};
 
 const loop = function(
   animation: CompositeAnimation,
-  {iterations = -1}: LoopAnimationConfig = {},
+  {iterations = -1, resetBeforeIteration = true}: LoopAnimationConfig = {},
 ): CompositeAnimation {
   let isFinished = false;
   let iterationsSoFar = 0;
@@ -436,7 +444,7 @@ const loop = function(
           callback && callback(result);
         } else {
           iterationsSoFar++;
-          animation.reset();
+          resetBeforeIteration && animation.reset();
           animation.start(restart);
         }
       };
@@ -514,6 +522,8 @@ const event = function(argMapping: Array<?Mapping>, config?: EventConfig): any {
  * easy to build and maintain. `Animated` focuses on declarative relationships
  * between inputs and outputs, with configurable transforms in between, and
  * simple `start`/`stop` methods to control time-based animation execution.
+ * If additional transforms are added, be sure to include them in
+ * AnimatedMock.js as well.
  *
  * See http://facebook.github.io/react-native/docs/animated.html
  */
@@ -684,6 +694,11 @@ module.exports = {
    */
   forkEvent,
   unforkEvent,
+
+  /**
+   * Expose Event class, so it can be used as a type for type checkers.
+   */
+  Event: AnimatedEvent,
 
   __PropsOnlyForTests: AnimatedProps,
 };

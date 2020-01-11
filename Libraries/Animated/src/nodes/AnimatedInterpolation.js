@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2015-present, Facebook, Inc.
+ * Copyright (c) Facebook, Inc. and its affiliates.
  *
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
@@ -14,8 +14,8 @@ const AnimatedNode = require('./AnimatedNode');
 const AnimatedWithChildren = require('./AnimatedWithChildren');
 const NativeAnimatedHelper = require('../NativeAnimatedHelper');
 
-const invariant = require('fbjs/lib/invariant');
-const normalizeColor = require('normalizeColor');
+const invariant = require('invariant');
+const normalizeColor = require('../../../Color/normalizeColor');
 
 type ExtrapolateType = 'extend' | 'identity' | 'clamp';
 
@@ -181,7 +181,7 @@ function colorToRgba(input: string): string {
   return `rgba(${r}, ${g}, ${b}, ${a})`;
 }
 
-const stringShapeRegex = /[0-9\.-]+/g;
+const stringShapeRegex = /[+-]?(?:\d+\.?\d*|\.\d+)(?:[eE][+-]?\d+)?/g;
 
 /**
  * Supports string shapes by extracting numbers so new values can be computed,
@@ -242,10 +242,11 @@ function createInterpolationFromStringOutputRange(
     // ->
     // 'rgba(${interpolations[0](input)}, ${interpolations[1](input)}, ...'
     return outputRange[0].replace(stringShapeRegex, () => {
-      const val = +interpolations[i++](input);
-      const rounded =
-        shouldRound && i < 4 ? Math.round(val) : Math.round(val * 1000) / 1000;
-      return String(rounded);
+      let val = +interpolations[i++](input);
+      if (shouldRound) {
+        val = i < 4 ? Math.round(val) : Math.round(val * 1000) / 1000;
+      }
+      return String(val);
     });
   };
 }
@@ -306,7 +307,9 @@ function checkInfiniteRange(name: string, arr: Array<number>) {
 
 class AnimatedInterpolation extends AnimatedWithChildren {
   // Export for testing.
-  static __createInterpolation = createInterpolation;
+  static __createInterpolation: (
+    config: InterpolationConfigType,
+  ) => (input: number) => number | string = createInterpolation;
 
   _parent: AnimatedNode;
   _config: InterpolationConfigType;
@@ -346,25 +349,8 @@ class AnimatedInterpolation extends AnimatedWithChildren {
     super.__detach();
   }
 
-  __transformDataType(range: Array<any>) {
-    // Change the string array type to number array
-    // So we can reuse the same logic in iOS and Android platform
-    /* $FlowFixMe(>=0.70.0 site=react_native_fb) This comment suppresses an
-     * error found when Flow v0.70 was deployed. To see the error delete this
-     * comment and run Flow. */
-    return range.map(function(value) {
-      if (typeof value !== 'string') {
-        return value;
-      }
-      if (/deg$/.test(value)) {
-        const degrees = parseFloat(value) || 0;
-        const radians = (degrees * Math.PI) / 180.0;
-        return radians;
-      } else {
-        // Assume radians
-        return parseFloat(value) || 0;
-      }
-    });
+  __transformDataType(range: Array<any>): Array<any> {
+    return range.map(NativeAnimatedHelper.transformDataType);
   }
 
   __getNativeConfig(): any {

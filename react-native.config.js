@@ -10,9 +10,10 @@
 
 const ios = require('@react-native-community/cli-platform-ios');
 const android = require('@react-native-community/cli-platform-android');
+const desktopCommands = require('./local-cli/commands');
 
 module.exports = {
-  commands: [...ios.commands, ...android.commands],
+  commands: [...ios.commands, ...android.commands, ...desktopCommands],
   platforms: {
     ios: {
       linkConfig: ios.linkConfig,
@@ -24,6 +25,7 @@ module.exports = {
       projectConfig: android.projectConfig,
       dependencyConfig: android.dependencyConfig,
     },
+    desktop: {},
   },
   /**
    * Used when running RNTester (with React Native from source)

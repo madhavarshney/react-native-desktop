@@ -52,8 +52,7 @@
     "template.config.js",
     "!template/node_modules",
     "!template/yarn.lock",
-    "!template/package-lock.json",
-    "patches"
+    "!template/package-lock.json"
   ],
   "scripts": {
     "prepare": "patch-package",
@@ -161,6 +160,7 @@
     "jest-junit": "^6.3.0",
     "jscodeshift": "^0.6.2",
     "mkdirp": "^0.5.1",
+    "metro": "~0.56.4",
     "patch-package": "^5.1.1",
     "prettier": "1.17.0",
     "react": "16.9.0",

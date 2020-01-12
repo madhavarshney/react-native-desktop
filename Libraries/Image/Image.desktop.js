@@ -11,16 +11,16 @@
 
 'use strict';
 
-var React = require('React');
+const React = require('react');
 const PropTypes = require('prop-types');
 
 var NativeModules = require('NativeModules');
 var ImageResizeMode = require('ImageResizeMode');
-var ImageStylePropTypes = require('ImageStylePropTypes');
-var StyleSheetPropType = require('StyleSheetPropType');
+// var ImageStylePropTypes = require('ImageStylePropTypes');
+// var StyleSheetPropType = require('StyleSheetPropType');
 var NativeMethodsMixin = require('NativeMethodsMixin');
 var ReactNativeViewAttributes = require('ReactNativeViewAttributes');
-const ImageSourcePropType = require('ImageSourcePropType');
+// const ImageSourcePropType = require('ImageSourcePropType');
 
 var requireNativeComponent = require('requireNativeComponent');
 var resolveAssetSource = require('resolveAssetSource');
@@ -31,23 +31,23 @@ var {
 } = NativeModules;
 
 var Image = createReactClass({
-  propTypes: {
-    style: StyleSheetPropType(ImageStylePropTypes),
-    source: PropTypes.oneOfType([
-      PropTypes.shape({
-        uri: PropTypes.string,
-      }),
-      PropTypes.number,
-    ]),
-    onLoadStart: PropTypes.func,
-    onProgress: PropTypes.func,
-    onError: PropTypes.func,
-    onLoad: PropTypes.func,
-    onLoadEnd: PropTypes.func,
-    testID: PropTypes.string,
-    blurRadius: PropTypes.number,
-    onLayout: PropTypes.func,
-  },
+  // propTypes: {
+  //   style: StyleSheetPropType(ImageStylePropTypes),
+  //   source: PropTypes.oneOfType([
+  //     PropTypes.shape({
+  //       uri: PropTypes.string,
+  //     }),
+  //     PropTypes.number,
+  //   ]),
+  //   onLoadStart: PropTypes.func,
+  //   onProgress: PropTypes.func,
+  //   onError: PropTypes.func,
+  //   onLoad: PropTypes.func,
+  //   onLoadEnd: PropTypes.func,
+  //   testID: PropTypes.string,
+  //   blurRadius: PropTypes.number,
+  //   onLayout: PropTypes.func,
+  // },
 
   statics: {
     resizeMode: ImageResizeMode,

@@ -12,7 +12,7 @@
 
 'use strict';
 
-const NativeModules = require('NativeModules');
+const NativeModules = require('../BatchedBridge/NativeModules');
 
 var Platform = {
   OS: 'desktop',

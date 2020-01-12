@@ -12,23 +12,23 @@
 
 'use strict';
 
-var ColorPropType = require('ColorPropType');
-var React = require('React');
+// var ColorPropType = require('ColorPropType');
+var React = require('react');
 var ReactPropTypes = require('prop-types');
-var StyleSheet = require('StyleSheet');
-var StyleSheetPropType = require('StyleSheetPropType');
-const ViewPropTypes = require('ViewPropTypes');
-var ViewStylePropTypes = require('ViewStylePropTypes');
+var StyleSheet = require('../../StyleSheet/StyleSheet');
+// var StyleSheetPropType = require('StyleSheetPropType');
+// const ViewPropTypes = require('ViewPropTypes');
+// var ViewStylePropTypes = require('ViewStylePropTypes');
 
-var requireNativeComponent = require('requireNativeComponent');
+var requireNativeComponent = require('../../ReactNative/requireNativeComponent');
 
 var REF_PICKER = 'picker';
 var MODE_DROPDOWN = 'dropdown';
 
-var pickerStyleType = StyleSheetPropType({
-  ...ViewStylePropTypes,
-  color: ColorPropType,
-});
+// var pickerStyleType = StyleSheetPropType({
+//   ...ViewStylePropTypes,
+//   color: ColorPropType,
+// });
 
 type Event = Object;
 
@@ -48,16 +48,16 @@ class PickerUbuntu extends React.Component {
 
   state: *;
 
-  static propTypes = {
-    ...ViewPropTypes,
-    style: pickerStyleType,
-    selectedValue: ReactPropTypes.any,
-    enabled: ReactPropTypes.bool,
-    mode: ReactPropTypes.oneOf(['dialog', 'dropdown']),
-    onValueChange: ReactPropTypes.func,
-    prompt: ReactPropTypes.string,
-    testID: ReactPropTypes.string,
-  };
+  // static propTypes = {
+  //   ...ViewPropTypes,
+  //   style: pickerStyleType,
+  //   selectedValue: ReactPropTypes.any,
+  //   enabled: ReactPropTypes.bool,
+  //   mode: ReactPropTypes.oneOf(['dialog', 'dropdown']),
+  //   onValueChange: ReactPropTypes.func,
+  //   prompt: ReactPropTypes.string,
+  //   testID: ReactPropTypes.string,
+  // };
 
   constructor(props, context) {
     super(props, context);

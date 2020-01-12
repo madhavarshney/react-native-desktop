@@ -1,3 +1,5 @@
+// TODO: desktop - upgrade this file to match latest RNTesterApp.android/ios.js
+
 /**
  * Copyright (c) 2015-present, Facebook, Inc.
  * All rights reserved.
@@ -11,29 +13,29 @@
  */
 'use strict';
 
-const AsyncStorage = require('AsyncStorage');
 const React = require('react');
 const ReactNative = require('react-native');
-const RNTesterActions = require('./RNTesterActions');
-const RNTesterExampleContainer = require('./RNTesterExampleContainer');
-const RNTesterExampleList = require('./RNTesterExampleList');
-const RNTesterList = require('./RNTesterList.desktop');
-const RNTesterNavigationReducer = require('./RNTesterNavigationReducer');
-const URIActionMap = require('./URIActionMap');
+const RNTesterActions = require('./utils/RNTesterActions');
+const RNTesterExampleContainer = require('./components/RNTesterExampleContainer');
+const RNTesterExampleList = require('./components/RNTesterExampleList');
+const RNTesterList = require('./utils/RNTesterList.desktop');
+const RNTesterNavigationReducer = require('./utils/RNTesterNavigationReducer');
+const URIActionMap = require('./utils/URIActionMap');
+const SnapshotViewIOS = require('./examples/Snapshot/SnapshotViewIOS.desktop');
 
 const {
+  AsyncStorage,
   Button,
   AppRegistry,
-  SnapshotViewIOS,
   StyleSheet,
   Text,
   View,
   SafeAreaView
 } = ReactNative;
 
-import type { RNTesterExample } from './RNTesterList.desktop';
-import type { RNTesterAction } from './RNTesterActions';
-import type { RNTesterNavigationState } from './RNTesterNavigationReducer';
+import type { RNTesterExample } from './utils/RNTesterList.desktop';
+import type { RNTesterAction } from './utils/RNTesterActions';
+import type { RNTesterNavigationState } from './utils/RNTesterNavigationReducer';
 
 type Props = {
   exampleFromAppetizeParams: string,
@@ -147,8 +149,8 @@ const styles = StyleSheet.create({
   },
 });
 
-AppRegistry.registerComponent('SetPropertiesExampleApp', () => require('./SetPropertiesExampleApp'));
-AppRegistry.registerComponent('RootViewSizeFlexibilityExampleApp', () => require('./RootViewSizeFlexibilityExampleApp'));
+AppRegistry.registerComponent('SetPropertiesExampleApp', () => require('./examples/SetPropertiesExample/SetPropertiesExampleApp'));
+AppRegistry.registerComponent('RootViewSizeFlexibilityExampleApp', () => require('./examples/RootViewSizeFlexibilityExample/RootViewSizeFlexibilityExampleApp'));
 AppRegistry.registerComponent('RNTesterApp', () => RNTesterApp);
 
 // Register suitable examples for snapshot tests
